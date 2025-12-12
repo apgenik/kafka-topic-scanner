@@ -1,0 +1,100 @@
+[
+  {
+    "cluster": "deeply",
+    "bootstrap": "",
+    "type": "consumer",
+    "topic": "nested.consumer.one",
+    "path": "root.deeply.nested.configs.kafka.consumers.one.tpc_name"
+  },
+  {
+    "cluster": "deeply",
+    "bootstrap": "",
+    "type": "consumer",
+    "topic": "nested.consumer.two",
+    "path": "root.deeply.nested.configs.kafka.consumers.two.myTopicName"
+  },
+  {
+    "cluster": "deeply",
+    "bootstrap": "",
+    "type": "producer",
+    "topic": "nested.producer.main",
+    "path": "root.deeply.nested.configs.kafka.producers.events.main"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "consumer",
+    "topic": "orders-group",
+    "path": "root.spring.kafka.consumer.group-id"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "consumer",
+    "topic": "earliest",
+    "path": "root.spring.kafka.consumer.auto-offset-reset"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "consumer",
+    "topic": "orders.input",
+    "path": "root.spring.kafka.consumer.topics.mainInput"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "consumer",
+    "topic": "orders.retry",
+    "path": "root.spring.kafka.consumer.topics.retryTopic"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "producer",
+    "topic": "orders.output",
+    "path": "root.spring.kafka.producer.topic"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "producer",
+    "topic": "orders.audit",
+    "path": "root.spring.kafka.producer.auditTopic"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "producer",
+    "topic": "gzip",
+    "path": "root.spring.kafka.producer.compression"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "producer",
+    "topic": "shipment.events",
+    "path": "root.kafka.clusterA.producer.shipment.eventTopic"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "producer",
+    "topic": "shipment.retry",
+    "path": "root.kafka.clusterA.producer.shipment.retry-topic"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "consumer",
+    "topic": "users.activity",
+    "path": "root.kafka.clusterB.consumer.users.subscriptionTopic"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "consumer",
+    "topic": "fraud.alerts",
+    "path": "root.kafka.clusterB.consumer.fraud.alerts.topicName"
+  }
+]

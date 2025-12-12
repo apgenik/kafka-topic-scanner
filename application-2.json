@@ -1,0 +1,93 @@
+[
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "producer",
+    "topic": "notif.sms.send.v1",
+    "path": "root.kafka.services.notification.producers.sms"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "producer",
+    "topic": "notif.email.send.v1",
+    "path": "root.kafka.services.notification.producers.email"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "consumer",
+    "topic": "notif.sms.status.v1",
+    "path": "root.kafka.services.notification.consumers[0]"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "",
+    "type": "consumer",
+    "topic": "notif.email.error.v1",
+    "path": "root.kafka.services.notification.consumers[1]"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "orders-kafka:9094",
+    "type": "producer",
+    "topic": "orders.create.v1",
+    "path": "root.kafka.services.order.client.producer.topics.orderCreateTopic"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "orders-kafka:9094",
+    "type": "producer",
+    "topic": "orders.cancel.v1",
+    "path": "root.kafka.services.order.client.producer.topics.orderCancelTopic"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "orders-kafka:9094",
+    "type": "consumer",
+    "topic": "order-service",
+    "path": "root.kafka.services.order.client.consumer.group"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "orders-kafka:9094",
+    "type": "consumer",
+    "topic": "enabled",
+    "path": "root.kafka.services.order.client.consumer.topics.order.events.v1"
+  },
+  {
+    "cluster": "kafka",
+    "bootstrap": "orders-kafka:9094",
+    "type": "consumer",
+    "topic": "enabled",
+    "path": "root.kafka.services.order.client.consumer.topics.order.payments.v1"
+  },
+  {
+    "cluster": "customConfig",
+    "bootstrap": "logistics-broker:9095",
+    "type": "producer",
+    "topic": "log.create.v1",
+    "path": "root.customConfig.kafkaEndpoints[0].producerTopics[0]"
+  },
+  {
+    "cluster": "customConfig",
+    "bootstrap": "logistics-broker:9095",
+    "type": "producer",
+    "topic": "log.update.v1",
+    "path": "root.customConfig.kafkaEndpoints[0].producerTopics[1]"
+  },
+  {
+    "cluster": "customConfig",
+    "bootstrap": "logistics-broker:9095",
+    "type": "consumer",
+    "topic": "log.tracking.v1",
+    "path": "root.customConfig.kafkaEndpoints[0].consumerTopics[0]"
+  },
+  {
+    "cluster": "customConfig",
+    "bootstrap": "logistics-broker:9095",
+    "type": "consumer",
+    "topic": "log.alerts.v1",
+    "path": "root.customConfig.kafkaEndpoints[0].consumerTopics[1]"
+  }
+]

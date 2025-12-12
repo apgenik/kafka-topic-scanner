@@ -1,0 +1,100 @@
+[
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka01:9092",
+    "type": "consumer",
+    "topic": "user-service",
+    "path": "root.spring.kafka.clusters.primary.consumer.group-id"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka01:9092",
+    "type": "consumer",
+    "topic": "users.created.v1",
+    "path": "root.spring.kafka.clusters.primary.consumer.topics[0]"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka01:9092",
+    "type": "consumer",
+    "topic": "users.deleted.v1",
+    "path": "root.spring.kafka.clusters.primary.consumer.topics[1]"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka01:9092",
+    "type": "producer",
+    "topic": "all",
+    "path": "root.spring.kafka.clusters.primary.producer.acks"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka01:9092",
+    "type": "producer",
+    "topic": "users.created.v1",
+    "path": "root.spring.kafka.clusters.primary.producer.topics.userCreated"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka01:9092",
+    "type": "producer",
+    "topic": "users.updated.v1",
+    "path": "root.spring.kafka.clusters.primary.producer.topics.userUpdated"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka02:9092",
+    "type": "producer",
+    "topic": "audit.log.v2",
+    "path": "root.spring.kafka.clusters.secondary.producer.topics.auditLog"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka02:9092",
+    "type": "consumer",
+    "topic": "audit-reader",
+    "path": "root.spring.kafka.clusters.secondary.consumer.group-id"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka02:9092",
+    "type": "consumer",
+    "topic": "audit.log.v2",
+    "path": "root.spring.kafka.clusters.secondary.consumer.topics[0]"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka02:9092",
+    "type": "consumer",
+    "topic": "audit.notifications.v1",
+    "path": "root.spring.kafka.clusters.secondary.consumer.topics[1]"
+  },
+  {
+    "cluster": "custom",
+    "bootstrap": "kafka-payments:9093",
+    "type": "producer",
+    "topic": "pay.create.v1",
+    "path": "root.custom.messaging.kafka.payments.producers.createPayment"
+  },
+  {
+    "cluster": "custom",
+    "bootstrap": "kafka-payments:9093",
+    "type": "producer",
+    "topic": "pay.confirm.v1",
+    "path": "root.custom.messaging.kafka.payments.producers.confirmPayment"
+  },
+  {
+    "cluster": "custom",
+    "bootstrap": "kafka-payments:9093",
+    "type": "consumer",
+    "topic": "pay.retry.v1",
+    "path": "root.custom.messaging.kafka.payments.consumers[0]"
+  },
+  {
+    "cluster": "custom",
+    "bootstrap": "kafka-payments:9093",
+    "type": "consumer",
+    "topic": "pay.dlq.v1",
+    "path": "root.custom.messaging.kafka.payments.consumers[1]"
+  }
+]
