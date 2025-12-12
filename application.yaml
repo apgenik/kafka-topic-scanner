@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: orders-service
+
+  kafka:
+    bootstrap-servers: "kafka1:9092,kafka2:9092"
+
+    consumer:
+      group-id: "orders-group"
+      auto-offset-reset: earliest
+      topics:
+        mainInput: "orders.input"
+        retryTopic: "orders.retry"
+
+    producer:
+      compression: gzip
+      topic: "orders.output"
+      auditTopic: "orders.audit"
+
+kafka:
+  clusterA:
+    servers: "kafka-cluster-a-01:9092"
+    producer:
+      shipment:
+        eventTopic: "shipment.events"
+        retry-topic: "shipment.retry"
+
+  clusterB:
+    bootstrapServers: "kafka-b.internal:29092"
+    consumer:
+      users:
+        subscriptionTopic: "users.activity"
+      fraud:
+        alerts:
+          topicName: "fraud.alerts"
+
+customKafkaConfigs:
+  analytics:
+    brokers: "analytics-kafka:9094"
+    output:
+      outTopic: "analytics.metrics"
+      archiveTopic: "analytics.archive"
+
+external:
+  eventing:
+    kafkaConfig:
+      host: "external-kafka-1:9092"
+      input:
+        customerEvent: "customer.events"
+        legacy:
+          topic-name: "legacy.events.raw"
+
+someWeirdService:
+  messaging:
+    kf:
+      servers: "strange-kafka:9200"
+      publish:
+        Tpc: "strange.output"
+      subscribe:
+        input_tpc: "strange.input"
+
+deeply:
+  nested:
+    configs:
+      kafka:
+        brokers: "nested-broker:9092"
+        consumers:
+          one:
+            tpc_name: "nested.consumer.one"
+          two:
+            myTopicName: "nested.consumer.two"
+        producers:
+          events:
+            main: "nested.producer.main"
+
+anotherCustomFormat:
+  dataFlows:
+    foo:
+      kafkaSourceTopic: "foo.source"
+      kafkaSinkTopic: "foo.sink"
+    bar:
+      input-topic: "bar.input"
+      output-topic: "bar.output"

@@ -1,0 +1,36 @@
+kafka:
+  common:
+    bootstrap: main-kafka:9092
+
+  services:
+    notification:
+      producers:
+        sms: notif.sms.send.v1
+        email: notif.email.send.v1
+      consumers:
+        - notif.sms.status.v1
+        - notif.email.error.v1
+
+    order:
+      client:
+        bootstrap: orders-kafka:9094
+        producer:
+          topics:
+            orderCreateTopic: orders.create.v1
+            orderCancelTopic: orders.cancel.v1
+        consumer:
+          group: order-service
+          topics:
+            order.events.v1: enabled
+            order.payments.v1: enabled
+
+customConfig:
+  kafkaEndpoints:
+    - name: logistics
+      bootstrap: logistics-broker:9095
+      producerTopics:
+        - log.create.v1
+        - log.update.v1
+      consumerTopics:
+        - log.tracking.v1
+        - log.alerts.v1

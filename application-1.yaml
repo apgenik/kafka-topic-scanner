@@ -1,0 +1,38 @@
+spring:
+  kafka:
+    clusters:
+      primary:
+        bootstrap-servers: kafka01:9092
+        producer:
+          acks: all
+          topics:
+            userCreated: users.created.v1
+            userUpdated: users.updated.v1
+        consumer:
+          group-id: user-service
+          topics:
+            - users.created.v1
+            - users.deleted.v1
+
+      secondary:
+        bootstrap-servers: kafka02:9092
+        producer:
+          topics:
+            auditLog: audit.log.v2
+        consumer:
+          group-id: audit-reader
+          topics:
+            - audit.log.v2
+            - audit.notifications.v1
+
+custom:
+  messaging:
+    kafka:
+      payments:
+        bootstrap: kafka-payments:9093
+        producers:
+          createPayment: pay.create.v1
+          confirmPayment: pay.confirm.v1
+        consumers:
+          - pay.retry.v1
+          - pay.dlq.v1
