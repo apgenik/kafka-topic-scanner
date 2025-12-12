@@ -1,45 +1,24 @@
-// Package main реализует небольшую CLI-утилиту, которая сканирует YAML (или
-// JSON) конфигурационные файлы в поиске имён Kafka-топиков и связанных
-// метаданных, и записывает найденные топики в JSON-файл.
-//
-// Использование:
-//
-//	go run kafka-scan.go <input.yaml> [output.json]
-//
-// Сканер использует эвристики: ключи, содержащие "producer" или "consumer",
-// считаются местами объявления топиков; ключи "bootstrap" или
-// "bootstrap-servers" используются для определения bootstrap-серверов Kafka.
 package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"gopkg.in/yaml.v3"
 )
 
 type KafkaTopic struct {
-	// Cluster — предполагаемое имя кластера или ближайший ключ в YAML-структуре,
-	// который группирует конфигурацию, где найден топик.
-	Cluster string `json:"cluster"`
-	// Bootstrap — адрес(а) bootstrap-серверов (значение ключа "bootstrap" или
-	// "bootstrap-servers", если присутствует рядом с определением).
+	Cluster   string `json:"cluster"`
 	Bootstrap string `json:"bootstrap"`
-	// Type — "producer" или "consumer" в зависимости от контекста, где был
-	// найден топик.
-	Type string `json:"type"`
-	// Topic — имя топика, найденное в конфигурации.
-	Topic string `json:"topic"`
-	// Path — путь в структуре YAML в точечной нотации (с индексами массивов),
-	// указывающий местоположение найденного значения.
-	Path string `json:"path"`
+	Type      string `json:"type"`  // producer / consumer
+	Topic     string `json:"topic"` // topic name
+	Path      string `json:"path"`  // where found
 }
 
 var results []KafkaTopic
-
-// results накапливает найденные топики в процессе сканирования.
 
 func main() {
 	if len(os.Args) < 2 {
@@ -48,40 +27,34 @@ func main() {
 	}
 
 	inputFile := os.Args[1]
-	outputFile := "kafka_topics.json"
+
+	outputFile := autoOutputName(inputFile)
 	if len(os.Args) >= 3 {
 		outputFile = os.Args[2]
 	}
 
 	data, err := os.ReadFile(inputFile)
 	if err != nil {
-		panic(err)
+		fatal("Failed to read file: %v", err)
 	}
 
 	var root interface{}
 	if err := yaml.Unmarshal(data, &root); err != nil {
-		panic(err)
+		fatal("YAML Unmarshal error: %v", err)
 	}
 
 	scanNode(root, "root", "", "")
 
-	out, _ := json.MarshalIndent(results, "", "  ")
-
-	// Сохраняем в файл
-	if err := os.WriteFile(outputFile, out, 0644); err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Kafka topics saved to %s\n", outputFile)
+	writeJSON(outputFile)
 }
 
 // ----------------------------------------------------
 
-func scanNode(node interface{}, path string, cluster string, bootstrap string) {
+func scanNode(node interface{}, path, cluster, bootstrap string) {
 	switch v := node.(type) {
 
 	case map[string]interface{}:
-		// обнаружение bootstrap
+		// detect bootstrap
 		for key, val := range v {
 			lkey := strings.ToLower(key)
 			if lkey == "bootstrap" || lkey == "bootstrap-servers" {
@@ -91,30 +64,23 @@ func scanNode(node interface{}, path string, cluster string, bootstrap string) {
 			}
 		}
 
-		// рекурсивное сканирование
+		// recursive handling
 		for key, val := range v {
 			lkey := strings.ToLower(key)
 
-			// detect cluster name
-			// определение имени кластера
 			newCluster := cluster
 			if cluster == "" {
 				newCluster = key
 			}
 
-			// detect producers
-			// обнаружение producer'ов
 			if strings.Contains(lkey, "producer") {
 				extractTopics(val, newCluster, bootstrap, "producer", path+"."+key)
 			}
 
-			// detect consumers
-			// обнаружение consumer'ов
 			if strings.Contains(lkey, "consumer") {
 				extractTopics(val, newCluster, bootstrap, "consumer", path+"."+key)
 			}
 
-			// рекурсивный вызов
 			scanNode(val, path+"."+key, newCluster, bootstrap)
 		}
 
@@ -127,7 +93,7 @@ func scanNode(node interface{}, path string, cluster string, bootstrap string) {
 
 // ----------------------------------------------------
 
-func extractTopics(node interface{}, cluster string, bootstrap string, kind string, path string) {
+func extractTopics(node interface{}, cluster, bootstrap, kind, path string) {
 	switch v := node.(type) {
 
 	case map[string]interface{}:
@@ -160,4 +126,46 @@ func extractTopics(node interface{}, cluster string, bootstrap string, kind stri
 			}
 		}
 	}
+}
+
+// ----------------------------------------------------
+// Save JSON
+// ----------------------------------------------------
+
+func writeJSON(outputFile string) {
+	out, err := json.MarshalIndent(results, "", "  ")
+	if err != nil {
+		fatal("JSON marshal error: %v", err)
+	}
+
+	// ensure directories exist
+	dir := filepath.Dir(outputFile)
+	if dir != "." {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			fatal("Failed to create directory %s: %v", dir, err)
+		}
+	}
+
+	if err := os.WriteFile(outputFile, out, 0644); err != nil {
+		fatal("Failed to write output file: %v", err)
+	}
+
+	fmt.Printf("✔ Kafka topics saved to: %s\n", outputFile)
+	fmt.Printf("✔ Total topics found: %d\n", len(results))
+}
+
+// ----------------------------------------------------
+// Utils
+// ----------------------------------------------------
+
+func fatal(format string, a ...interface{}) {
+	msg := fmt.Sprintf(format, a...)
+	fmt.Printf("❌ %s\n", msg)
+	os.Exit(1)
+}
+
+func autoOutputName(input string) string {
+	base := filepath.Base(input)
+	clean := strings.TrimSuffix(base, filepath.Ext(base))
+	return clean + "_kafka_topics.json"
 }

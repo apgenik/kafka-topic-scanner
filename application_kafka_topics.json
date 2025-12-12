@@ -24,15 +24,15 @@
     "cluster": "spring",
     "bootstrap": "kafka1:9092,kafka2:9092",
     "type": "consumer",
-    "topic": "orders-group",
-    "path": "root.spring.kafka.consumer.group-id"
+    "topic": "earliest",
+    "path": "root.spring.kafka.consumer.auto-offset-reset"
   },
   {
     "cluster": "spring",
     "bootstrap": "kafka1:9092,kafka2:9092",
     "type": "consumer",
-    "topic": "earliest",
-    "path": "root.spring.kafka.consumer.auto-offset-reset"
+    "topic": "orders.retry",
+    "path": "root.spring.kafka.consumer.topics.retryTopic"
   },
   {
     "cluster": "spring",
@@ -45,15 +45,8 @@
     "cluster": "spring",
     "bootstrap": "kafka1:9092,kafka2:9092",
     "type": "consumer",
-    "topic": "orders.retry",
-    "path": "root.spring.kafka.consumer.topics.retryTopic"
-  },
-  {
-    "cluster": "spring",
-    "bootstrap": "kafka1:9092,kafka2:9092",
-    "type": "producer",
-    "topic": "orders.output",
-    "path": "root.spring.kafka.producer.topic"
+    "topic": "orders-group",
+    "path": "root.spring.kafka.consumer.group-id"
   },
   {
     "cluster": "spring",
@@ -68,6 +61,13 @@
     "type": "producer",
     "topic": "gzip",
     "path": "root.spring.kafka.producer.compression"
+  },
+  {
+    "cluster": "spring",
+    "bootstrap": "kafka1:9092,kafka2:9092",
+    "type": "producer",
+    "topic": "orders.output",
+    "path": "root.spring.kafka.producer.topic"
   },
   {
     "cluster": "kafka",
